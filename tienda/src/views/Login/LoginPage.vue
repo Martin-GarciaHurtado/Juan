@@ -68,9 +68,18 @@
           "Email" : this.Email,
           "Password" : this.Password
         };
-        if ( json.Email == 'prueba@ugto.mx' && json.Password == 'Prueba123' ){
-          this.$router.push({ name: 'home' })
-          console.log(json)
+        if ( (json.Email == 'prueba@ugto.mx' && json.Password == 'Prueba123') || (json.Email == 'prueba2@ugto.mx' && json.Password == 'Prueba123') ){
+          if ( json.Email == 'prueba@ugto.mx' ) {
+            sessionStorage.setItem('User', "Martin Garcia Hurtado")
+            sessionStorage.setItem('Rol', 1)
+            this.$router.push({ path: '/' })
+          }
+          else {
+            sessionStorage.setItem('User', "Usuario")
+            sessionStorage.setItem('Rol', 2)
+            this.$router.push({ path: '/userpage' })
+          }
+          
         }
       }
     },
