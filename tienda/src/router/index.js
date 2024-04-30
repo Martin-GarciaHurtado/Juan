@@ -81,7 +81,7 @@ router.beforeEach((to, from, netx) =>{
       netx();
     }else{
       netx({
-        name: 'login',
+        path: '/login',
       })
     }
   }else{

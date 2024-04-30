@@ -50,7 +50,7 @@
                   icon="mdi-plus"
                   color="green"
                   variant="plain"
-                  @click="dialog = false"
+                  @click="addArt()"
                 ></v-btn>
               </v-row>
             </v-card-title>
@@ -65,6 +65,8 @@
                     v-model="articulo"
                     :items="articulos"
                     label="Prenda"
+                    rounded
+                    @click="onchange($event)"
                   ></v-select>
                 </v-col>
   
@@ -77,6 +79,7 @@
                     v-model="talla"
                     :items="tallas"
                     label="Talla"
+                    rounded
                   ></v-select>
                 </v-col>
   
@@ -86,8 +89,10 @@
                   sm="4"
                 >
                   <v-text-field
+                    v-model="cantidad"
                     label="Cantidad"
                     required
+                    rounded
                   ></v-text-field>
                 </v-col>
 
@@ -97,14 +102,19 @@
                   sm="4"
                 >
                   <v-text-field
-                    label="249.99"
+                    label="$"
                     required
-                    disabled="true"
+                    rounded
+                    v-model="price"
                   ></v-text-field>
                 </v-col>
               </v-row>
               
               <small class="text-caption text-medium-emphasis">*Se requiere llenar todos los campos.</small>
+              <br>
+              {{ articulo }}
+              <br>
+              {{ venta }}
             </v-card-text>
   
             <v-divider></v-divider>
@@ -133,20 +143,23 @@
   </template>
   
   <script>
+//import { computed } from 'vue';
+
   
   export default {
     name: 'UserPage',
     data () {
       return {
+        price: 10,
         articulos: [
-            'Playera',
-            'Mangas',
-            'Shorts',
-            'Bandana',
-            'Goggles',
-            'Guantes'
+          'Playera',
+          'Mangas',
+          'Shorts',
+          'Bandana',
+          'Goggles',
+          'Guantes'
         ],
-        articulo: 'Playera',
+        articulo: '',
         tallas: [
             'CH',
             'M',
@@ -156,6 +169,7 @@
             'XXXL'
         ],
         talla: 'CH',
+        cantidad: '',
         venta: [],
         search: '',
         dialog: false,
@@ -175,8 +189,32 @@
       }
     },
     methods: {
-  
+      addArt(){
+        this.venta.push({ name: this.articulo, size: this.talla, cantidad: this.cantidad, tot: this.price}) 
+        this.articulo = ''
+        this.talla = ''
+      },
+      onchange(event){
+        console.log(this.articulo)
+        console.log(event.target.value)
+        if ( event === 'Playera' )
+          this.price =10.00
+        else if ( event === 'Mangas' )
+          this.price =20.00
+        else if ( event === 'Shorts' )
+          this.price =30.00
+        else if ( event === 'Bandana' )
+          this.price =40.00
+        else if ( event === 'Goggles' )
+          this.price =50.00
+        else if ( event === 'Guantes' )
+          this.price =60.00
+      }
+      
     },
+    //computed: {
+      
+    //},
     components: {
       
     },
