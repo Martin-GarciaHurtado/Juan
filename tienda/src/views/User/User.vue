@@ -30,10 +30,18 @@
   
         <v-divider></v-divider>
       </v-card>
-      <v-data-table :headers="headers" v-model:search="search" :items="items" item-value="ref">
-        
+      <v-data-table :headers="headers" v-model="search" :search="search" :items="compras">
+        <template v-slot:[`item.actions`]="{ item }">
+            <v-icon
+                class="me-2"
+                size="small"
+                @click="ver(item)"
+            >
+                mdi-eye
+            </v-icon>
+        </template>        
       </v-data-table>
-  
+
       <div class="pa-4 text-center">
         <v-dialog
           v-model="dialog"
@@ -66,7 +74,6 @@
                     :items="articulos"
                     label="Prenda"
                     rounded
-                    @click="onchange($event)"
                   ></v-select>
                 </v-col>
   
@@ -111,10 +118,8 @@
               </v-row>
               
               <small class="text-caption text-medium-emphasis">*Se requiere llenar todos los campos.</small>
-              <br>
-              {{ articulo }}
-              <br>
-              {{ venta }}
+              <v-data-table :headers="head" :items="venta" no-data-text="Por el momento no se encuentra ningun articulo en la lista.">
+              </v-data-table>
             </v-card-text>
   
             <v-divider></v-divider>
@@ -126,14 +131,14 @@
               color="red"
                 text="Close"
                 variant="plain"
-                @click="dialog = false"
+                @click="close()"
               ></v-btn>
   
               <v-btn
                 color="green"
                 text="Save"
                 variant="tonal"
-                @click="dialog = false"
+                @click="save()"
               ></v-btn>
             </v-card-actions>
           </v-card>
@@ -150,7 +155,9 @@
     name: 'UserPage',
     data () {
       return {
-        price: 10,
+        aux: 0,
+        aux2: 0,
+        price: '',
         articulos: [
           'Playera',
           'Mangas',
@@ -168,48 +175,71 @@
             'XXL',
             'XXXL'
         ],
-        talla: 'CH',
+        talla: '',
         cantidad: '',
         venta: [],
         search: '',
         dialog: false,
+        totalC: 0,
         headers: [
           { title: 'N° Ticket', align: 'start', key: 'ref' },
           { title: 'Fecha', key: 'fecha' },
           { title: 'Cantidad de articulos',  key: 'count' },
-          { title: 'Total', key: 'tot' }
+          { title: 'Total', key: 'tot' },
+          { title: 'Ver Compra', key: 'actions', sortable: false },
         ],
-        items: [
+        compras: [/*
           { ref: '000111', fecha: '12-04-2024', count: 10, tot: 3500 },
           { ref: '000222', fecha: '15-04-2024', count: 8, tot: 2872 },
           { ref: '000333', fecha: '19-04-2024', count: 15, tot: 4485 },
           { ref: '000444', fecha: '22-04-2024', count: 2, tot: 250 },
-          { ref: '000555', fecha: '28-04-2024', count: 1, tot: 70 }
+          { ref: '000555', fecha: '28-04-2024', count: 1, tot: 70 }*/
         ],
+        head: [
+            { title: 'ID', align: 'start', key:'id' },
+            { title: 'Nombre', key:'prenda' },
+            { title: 'Talla', key: 'size' },
+            { title: 'Cantidad', key: 'cant' },
+            { title: 'Prescio', key: 'cost' },
+            { title: 'Total', key: 'total' }
+        ],
+        lista: [],
       }
     },
     methods: {
       addArt(){
-        this.venta.push({ name: this.articulo, size: this.talla, cantidad: this.cantidad, tot: this.price}) 
+        this.aux++
+        const totalPrice = this.price*this.cantidad
+        this.venta.push({ id: this.aux, prenda: this.articulo, size: this.talla, cant: this.cantidad, cost: this.price, total: totalPrice }) 
         this.articulo = ''
         this.talla = ''
+        this.price = ''
+        this.cantidad = ''
       },
-      onchange(event){
-        console.log(this.articulo)
-        console.log(event.target.value)
-        if ( event === 'Playera' )
-          this.price =10.00
-        else if ( event === 'Mangas' )
-          this.price =20.00
-        else if ( event === 'Shorts' )
-          this.price =30.00
-        else if ( event === 'Bandana' )
-          this.price =40.00
-        else if ( event === 'Goggles' )
-          this.price =50.00
-        else if ( event === 'Guantes' )
-          this.price =60.00
-      }
+      close(){
+        this.dialog = false
+        this.venta = []
+        this.aux = 0
+      },
+      ver(item){
+        console.log(item)
+        const fec = Date()
+        console.log(fec)
+      },
+      save(){
+        this.dialog = false
+        this.aux2++
+        console.log(JSON.stringify(this.venta))
+        for( var i = 0; i < this.venta.length; i++ ){
+            this.totalC+=this.venta[i].total
+        }
+        console.log(this.totalC)
+        this.compras.push({ ref:  this.aux2, fecha: '12-04-2024', count: this.aux, tot: this.totalC, list: this.venta })
+        this.venta = []
+        this.aux = 0
+        this.totalC = 0
+        console.log(JSON.stringify(this.compras))
+      },
       
     },
     //computed: {

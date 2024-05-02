@@ -20,7 +20,7 @@
       </v-card-title>
       <v-divider></v-divider>
     </v-card>
-    <v-data-table :headers="headers" v-model:search="search" :items="items" item-value="ref">
+    <v-data-table :headers="headers" v-model="search" :search="search" :items="items" item-value="ref">
     </v-data-table>
   </v-container>
 </template>
