@@ -21,6 +21,15 @@
       <v-divider></v-divider>
     </v-card>
     <v-data-table :headers="headers" v-model="search" :search="search" :items="items" item-value="ref">
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon
+          class="me-2"
+          size="small"
+          @click="ver(item)"
+        >
+          mdi-eye
+        </v-icon>
+      </template> 
     </v-data-table>
   </v-container>
 </template>
@@ -34,24 +43,25 @@ export default {
       search: '',
       dialog: false,
       headers: [
-        { title: 'N° Referencia', align: 'start', key: 'ref' },
-        { title: 'Nombre',  key: 'name' },
-        { title: 'Tamaño', key: 'size' },
-        { title: 'Precio', key: 'price' },
-        { title: 'Cantidad', key: 'quantity' },
-        { title: 'Total', key: 'tot' }
+      { title: 'N° Ticket', align: 'start', key: 'ticket' },
+          { title: 'Fecha', key: 'fecha' },
+          { title: 'Cantidad de articulos',  key: 'count' },
+          { title: 'Total', key: 'tot' },
+          { title: 'Ver Compra', key: 'actions', sortable: false },
       ],
       items: [
-        { ref: '000111', name: 'Playera', size: 'CH', price: 250, quantity: 10, tot: 2500 },
-        { ref: '000222', name: 'Pantalon', size: '32', price: 359, quantity: 8, tot: 2872 },
-        { ref: '000333', name: 'Camisa', size: 'M', price: 299, quantity: 15, tot: 4485 },
-        { ref: '000444', name: 'Boxer', size: 'G', price: 50, quantity: 5, tot: 250 },
-        { ref: '000555', name: 'Calcetin', size: 'Unitalla', price: 7, quantity: 10, tot: 70 }
+        { ticket: '000111', fecha: '12-04-2024', count: '14', tot: 4500 },
+        { ticket: '000222', fecha: '13-04-2024', count: '10', tot: 3590 },
+        { ticket: '000333', fecha: '14-04-2024', count: '15', tot: 2999 },
+        { ticket: '000444', fecha: '15-04-2024', count: '10', tot: 500 },
+        { ticket: '000555', fecha: '16-04-2024', count: '5', tot: 350 }
       ],
     }
   },
   methods: {
-
+    ver(item){
+      console.log(item)
+    }
   },
   components: {
     
